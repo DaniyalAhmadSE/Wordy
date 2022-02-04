@@ -1,0 +1,5 @@
+MID = 3
+ONLY = 6
+
+TOP = (ONLY, MID)
+BOTTOM = (MID, ONLY)
