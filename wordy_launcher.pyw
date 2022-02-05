@@ -3,6 +3,7 @@ import tkinter.ttk as ttk
 from utils.wordy_api import WordyApi
 from utils import make_read_only as mro
 from utils import enable_ctrl_a_select as ecas
+from utils import add_place_holder as aph
 from constants import paddings as pd
 import mttkinter as mutlithreading_helper  # IGNORE
 
@@ -14,7 +15,10 @@ class WordyGui(tkn.Tk):
         self.title('Wordy')
         self.geometry('500x360')
         # self.resizable(False, False)
-        # self.load_screen()
+        self.start_app()
+
+    def start_app(self):
+        self.load_screen()
         self.main_screen()
         # self.add_screen()
 
@@ -59,6 +63,7 @@ class WordyGui(tkn.Tk):
         def search():
             result = self.api.search(ent_word.get())
             print(result)
+            txt_means.config(state=tkn.NORMAL, fg='black')
             txt_means.delete(1.0, tkn.END)
             txt_means.insert(tkn.END, result)
 
@@ -68,7 +73,7 @@ class WordyGui(tkn.Tk):
 
         frm_main = ttk.Frame(self)
 
-        ent_word = ttk.Entry(frm_main, width=57)
+        ent_word = tkn.Entry(frm_main, width=57)
         btn_search = ttk.Button(frm_main, text='Search', command=search)
 
         frm_means = ttk.Frame(frm_main)
@@ -89,6 +94,10 @@ class WordyGui(tkn.Tk):
         btn_del = ttk.Button(frm_main, text='Delete')
 
         ecas.enable_ctrl_a_select(ent_word)
+        aph.add_place_holder(ent_word, 'Enter Word')
+        aph.add_place_holder(
+            txt_means, 'Meanings will be displayed here', True
+        )
         mro.make_read_only(txt_means)
 
         ent_word.grid(
@@ -110,13 +119,13 @@ class WordyGui(tkn.Tk):
 
         frm_add = ttk.Frame(self)
 
-        ent_word = ttk.Entry(frm_add, width=40)
-        etn_sa = ttk.Entry(frm_add, width=26)
+        ent_word = tkn.Entry(frm_add, width=40)
+        ent_sa = tkn.Entry(frm_add, width=26)
         frm_means = ttk.Frame(frm_add)
         scr_means = ttk.Scrollbar(frm_means)
         txt_means = tkn.Text(
-            frm_means, height=17, width=58, wrap=tkn.WORD,
-            insertontime=0, yscrollcommand=scr_means.set
+            frm_means, height=17, width=58,
+            wrap=tkn.WORD, yscrollcommand=scr_means.set
         )
         scr_means.config(command=txt_means.yview)
         scr_means.pack(side=tkn.RIGHT, fill=tkn.Y)
@@ -127,9 +136,14 @@ class WordyGui(tkn.Tk):
         btn_del = ttk.Button(frm_add, text='Add')
 
         ecas.enable_ctrl_a_select(ent_word)
+        aph.add_place_holder(ent_word, 'Enter Word')
+        aph.add_place_holder(ent_sa, 'See Also')
+        aph.add_place_holder(
+            txt_means, 'Enter meanings, separated by a blank line', True
+        )
 
         ent_word.grid(row=0, column=0, ipady=3, pady=pd.TOP, sticky='w')
-        etn_sa.grid(
+        ent_sa.grid(
             row=0, column=1, columnspan=6, ipady=3, pady=pd.TOP, sticky='e'
         )
         frm_means.grid(row=1, column=0, columnspan=7, pady=pd.MID)
