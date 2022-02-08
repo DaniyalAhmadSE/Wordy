@@ -1,6 +1,5 @@
 from tkinter import ttk
-from models.bst import BST
-from models.vucab import Vucab
+from models.avl import AVL
 from constants.load_times import STRUCT_INIT_TIME
 
 
@@ -10,7 +9,6 @@ class HashTable5D:
             self.create_structure(sz)
 
     def create_structure(self, sz: int, prog_b: ttk.Progressbar = None):
-        print('Generating Program Structure')
         self._arr = [
             self.init_inners(sz, prog_b) for t in range(sz)
         ]
@@ -42,7 +40,7 @@ class HashTable5D:
 
         return index
 
-    def search(self, key: str) -> Vucab:
+    def search(self, key: str):
         nest = 5
         idx = [0]*nest
         sz = key.__len__()
@@ -56,7 +54,7 @@ class HashTable5D:
         for i in range(nest):
             loc_path = loc_path[idx[i]]
 
-        loc: BST = loc_path
+        loc: AVL = loc_path
         if loc is None:
             return None
         result = loc.search_node(key)
@@ -64,27 +62,27 @@ class HashTable5D:
             return None
         return result.data
 
-    def insert(self, val: Vucab, init_i=0):
+    def insert(self, obj, key, init_i=0):
         nest = 5
         idx = [0]*nest
-        sz = val.word.__len__()
+        sz = key.__len__()
 
         idx[0] = init_i
         start_hash_from = 0 if init_i == 0 else 1
         for i in range(start_hash_from, nest):
             if i >= sz:
                 break
-            idx[i] = self.hash(val.word[i])
+            idx[i] = self.hash(key[i])
 
         dest_path = self.arr
         for i in range(nest):
             loc = idx[i]
             if dest_path[loc] is None:
-                dest_path[loc] = BST()
+                dest_path[loc] = AVL()
 
             dest_path = dest_path[loc]
 
-        dest: BST = dest_path
-        dest.insert(val)
+        dest: AVL = dest_path
+        dest.avl_insert(obj, key)
 
     arr = property(get_arr)
