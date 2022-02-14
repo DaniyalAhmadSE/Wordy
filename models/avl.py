@@ -90,17 +90,13 @@ class AVL(BST):
 
         b_fact = self.get_balance(point)
         if b_fact > 1 and key_l < p_left_l:
-            print('\nLEFT LEFT\n')
             self.right_rotate(point.left)
         elif b_fact < -1 and key_l > p_right_l:
-            print('\nRIGHT RIGHT\n')
             self.left_rotate(point.right)
         elif b_fact > 1 and key_l > p_left_l:
-            print('\nLEFT RIGHT\n')
             self.left_rotate(point.left.right)
             self.right_rotate(point.left)
         elif b_fact < -1 and key_l < p_right_l:
-            print('\nRIGHT LEFT\n')
             self.right_rotate(point.right.left)
             self.left_rotate(point.right)
 
@@ -110,20 +106,16 @@ class AVL(BST):
 
         axel = None
         if b_fact > 1 and self.get_balance(point.left) >= 0:
-            print('\nLEFT LEFT\n')
             axel = point.left
             self.right_rotate(axel)
         elif b_fact < -1 and self.get_balance(point.right) <= 0:
-            print('\nRIGHT RIGHT\n')
             axel = point.right
             self.left_rotate(axel)
         elif b_fact > 1 and self.get_balance(point.left) < 0:
-            print('\nLEFT RIGHT\n')
             axel = point.left.right
             self.left_rotate(axel)
             self.right_rotate(point.left)
         elif b_fact < -1 and self.get_balance(point.right) > 0:
-            print('\nRIGHT LEFT\n')
             axel = point.right.left
             self.right_rotate(axel)
             self.left_rotate(point.right)

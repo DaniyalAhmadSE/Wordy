@@ -1,13 +1,13 @@
 import json
 from tkinter import ttk
-from models.hash_table_5d import HashTable5D
+from models.hash_table_md import HashTableMD
 from models.vucab import Vucab
 
 from glob import glob
 from constants import load_times as lt, test_mode as tm
 
 
-class Wordy(HashTable5D):
+class Wordy(HashTableMD):
     def __init__(self, sz: int = 27, init=True) -> None:
         super().__init__(sz, init)
         if init:
@@ -83,3 +83,7 @@ class Wordy(HashTable5D):
     def add(self, word, meanings):
         vuc = Vucab(word, meanings)
         self.insert(vuc, word, 0)
+
+    def delete(self, word):
+        self.delete(word)
+

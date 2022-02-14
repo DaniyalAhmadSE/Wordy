@@ -1,7 +1,7 @@
 from utils.wordy_api import WordyApi
 
 
-def main():
+def launch_cli():
     wordy_api = WordyApi(gui_mode=False)
 
     print('\nWORDY v1.02\n')
@@ -34,5 +34,5 @@ def main():
             print('\nInvalid choice\n')
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    launch_cli()

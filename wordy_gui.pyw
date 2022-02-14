@@ -51,7 +51,7 @@ class WordyGui(tkn.Tk):
         prg_bar.pack(pady=10)
         lbl_load.pack()
         frm_load.pack(expand=1)
-        self.api.start(prg_bar, lbl_load)
+        self.api.start_thread(prg_bar, lbl_load)
 
         # Waiting till the Loading Completes
         while prg_bar.cget('value') < 100:
@@ -154,10 +154,10 @@ class WordyGui(tkn.Tk):
         frm_add.pack()
 
 
-def main():
+def launch_gui():
     gui = WordyGui()
     gui.mainloop()
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    launch_gui()

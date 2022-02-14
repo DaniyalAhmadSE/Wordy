@@ -1,28 +1,36 @@
+import threading
+from copy import deepcopy
 from tkinter import ttk
 from models.avl import AVL
 from constants.load_times import STRUCT_INIT_TIME
 
 
-class HashTable5D:
-    def __init__(self, sz: int = 27, init=True) -> None:
+class HashTableMD:
+    def __init__(self, sz: int = 27, init=True, dimensions=5) -> None:
+        self._dimensions = dimensions
         if init:
             self.create_structure(sz)
 
     def create_structure(self, sz: int, prog_b: ttk.Progressbar = None):
         self._arr = [
-            self.init_inners(sz, prog_b) for t in range(sz)
+            self.init_inners(sz, prog_b) for u in range(sz)
         ]
 
     def init_inners(self, sz, prog_b: ttk.Progressbar = None):
         if prog_b is not None:
             prog_b.step(STRUCT_INIT_TIME/sz)
-        return [
-            [
-                [
-                    [None for p in range(sz)] for q in range(sz)
-                ] for r in range(sz)
-            ] for s in range(sz)
-        ]
+
+        x = None
+
+        dim = self.dimensions
+
+        for d in range(dim - 1):
+            x = [deepcopy(x) for _ in range(sz)]
+
+        return x
+
+    def get_dimensions(self) -> int:
+        return self._dimensions
 
     def get_arr(self) -> list:
         return self._arr
@@ -41,7 +49,7 @@ class HashTable5D:
         return index
 
     def search(self, key: str):
-        nest = 5
+        nest = self.dimensions
         idx = [0]*nest
         sz = key.__len__()
 
@@ -63,7 +71,7 @@ class HashTable5D:
         return result.data
 
     def insert(self, obj, key, init_i=0):
-        nest = 5
+        nest = self.dimensions
         idx = [0]*nest
         sz = key.__len__()
 
@@ -85,4 +93,5 @@ class HashTable5D:
         dest: AVL = dest_path
         dest.avl_insert(obj, key)
 
+    dimensions = property(get_dimensions)
     arr = property(get_arr)

@@ -40,10 +40,6 @@ class WordyApi:
                         see_txt += ' Also'
                     result += see_txt + ': ' + meanings_list[i][3:] + '\n\n'
                 else:
-                    # num = ''
-                    # if sz > 1:
-                    # num = str(i + 1) + '. '
-                    # result += num + meanings_list[i] + '\n\n'
                     result += meanings_list[i] + '\n\n'
 
         return result
