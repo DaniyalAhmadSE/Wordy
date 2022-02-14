@@ -4,14 +4,14 @@ from models.wordy import Wordy
 
 
 class WordyApi:
-    def __init__(self) -> None:
-        self._wordy = Wordy(init=False)
+    def __init__(self, gui_mode=True) -> None:
+        self._wordy = Wordy(init=not gui_mode)
         pass
 
-    def start(self, prog_bar=None, lbl=None):
+    def start_thread(self, prog_bar=None, lbl=None):
         load_thread = threading.Thread(
             target=self.wordy.initialize,
-            kwargs={'init': True, 'prog_bar': prog_bar, 'lbl': lbl}
+            kwargs={'prog_bar': prog_bar, 'lbl': lbl}
         )
         load_thread.start()
         return load_thread
@@ -40,10 +40,6 @@ class WordyApi:
                         see_txt += ' Also'
                     result += see_txt + ': ' + meanings_list[i][3:] + '\n\n'
                 else:
-                    # num = ''
-                    # if sz > 1:
-                    # num = str(i + 1) + '. '
-                    # result += num + meanings_list[i] + '\n\n'
                     result += meanings_list[i] + '\n\n'
 
         return result

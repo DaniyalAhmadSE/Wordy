@@ -1,8 +1,8 @@
-from models.wordy import Wordy
+from utils.wordy_api import WordyApi
 
 
-def main():
-    wordy = Wordy()
+def launch_cli():
+    wordy_api = WordyApi(gui_mode=False)
 
     print('\nWORDY v1.02\n')
 
@@ -18,16 +18,13 @@ def main():
 
         if choice == '1':
             word = input('\nEnter the word you want to search for: ')
-            result = wordy.search(word)
-            if result is not None:
-                result.display()
-            else:
-                print('\nSorry, that word is not in the dictionary.')
+            result = wordy_api.search(word)
+            print('\n' + result)
 
         elif choice == '2':
             word = input('\nEnter the word you want to add: ')
             meaning = input('Enter the meaning of the word: ')
-            wordy.add(word, meaning)
+            wordy_api.add(word, meaning)
 
         elif choice == 'q':
             print('\nGoodbye!\n')
@@ -37,5 +34,5 @@ def main():
             print('\nInvalid choice\n')
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    launch_cli()
