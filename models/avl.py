@@ -121,11 +121,7 @@ class AVL(BST):
             self.left_rotate(point.right)
         return axel
 
-    def insert_from_point(self, obj, key, point: Node, is_first=True) -> None:
-        if is_first:
-            if self.search_node(key) is not None:
-                print('Word already exists')
-                return
+    def push(self, obj, key, point: Node):
 
         new_node: Node = Node(obj)
 
@@ -141,18 +137,33 @@ class AVL(BST):
                 new_node.parent = point
                 point.left = new_node
             else:
-                self.insert_from_point(obj, key, point.left, False)
+                self.push(obj, key, point.left)
         elif key_l > point_l:
             if point.right is None:
                 point.right = new_node
             else:
-                self.insert_from_point(obj, key, point.right, False)
+                self.push(obj, key, point.right)
+        # Update
+        else:
+            point.data = new_node.data
 
         self.balance_add(point, key_l)
 
-    def avl_insert(self, obj, key):
-        self.insert_from_point(obj, key, self.root)
-        return
+    def avl_insert(self, obj, key) -> bool:
+        if self.search_node(key) is not None:
+            print('Word already exists')
+            return False
+
+        self.push(obj, key, self.root)
+        return True
+
+    def avl_update(self, obj, key) -> bool:
+        if self.search_node(key) is None:
+            print('Word does not exists')
+            return False
+
+        self.push(obj, key, self.root)
+        return True
 
     def del_from_point(self, point: Node, key_l) -> Node:
         if not point:

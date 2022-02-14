@@ -10,8 +10,8 @@ def launch_cli():
 
     while choice != 'q':
 
-        print("\nEnter 1 to search for a word's meaning")
-        print("Enter 2 to add a word to the dictionary")
+        print("\nEnter 1 to search for a word")
+        print("Enter 2 to add a word")
         print("Enter q to quit\n")
 
         choice = input('Enter your choice: ')
@@ -24,7 +24,10 @@ def launch_cli():
         elif choice == '2':
             word = input('\nEnter the word you want to add: ')
             meaning = input('Enter the meaning of the word: ')
-            wordy_api.add(word, meaning)
+            if wordy_api.add(word, meaning):
+                print('Word added Successfully')
+            else:
+                print('Word already exists')
 
         elif choice == 'q':
             print('\nGoodbye!\n')

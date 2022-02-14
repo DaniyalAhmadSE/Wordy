@@ -19,7 +19,7 @@ class WordyGui(tkn.Tk):
 
     def start_app(self):
         self.load_screen()
-        self.main_screen()
+        self.search_screen()
         # self.add_screen()
 
     def load_screen(self):
@@ -58,7 +58,7 @@ class WordyGui(tkn.Tk):
             self.update()
         frm_load.pack_forget()
 
-    def main_screen(self):
+    def search_screen(self):
 
         def search():
             result = self.api.search(ent_word.get())
@@ -67,7 +67,16 @@ class WordyGui(tkn.Tk):
             txt_means.delete(1.0, tkn.END)
             txt_means.insert(tkn.END, result)
 
-        def main_to_add():
+        def delete():
+            result = self.api.delete(ent_word.get())
+            print(result)
+            ent_word.delete(0, tkn.END)
+            ent_word.event_generate('<FocusOut>')
+            txt_means.config(state=tkn.NORMAL, fg='black')
+            txt_means.delete(1.0, tkn.END)
+            txt_means.event_generate('<FocusOut>')
+
+        def search_to_add():
             frm_main.pack_forget()
             self.add_screen(ent_word.get())
 
@@ -88,10 +97,10 @@ class WordyGui(tkn.Tk):
 
         scr_means = ttk.Scrollbar(frm_main, command=txt_means.yview)
         btn_lnk_add = ttk.Button(
-            frm_main, text='Add Word', command=main_to_add
+            frm_main, text='Add Word', command=search_to_add
         )
         btn_edit = ttk.Button(frm_main, text='Edit')
-        btn_del = ttk.Button(frm_main, text='Delete')
+        btn_del = ttk.Button(frm_main, text='Delete', command=delete)
 
         ecas.enable_ctrl_a_select(ent_word)
         aph.add_place_holder(ent_word, 'Enter Word')
@@ -113,9 +122,15 @@ class WordyGui(tkn.Tk):
 
     def add_screen(self, word=''):
 
+        def add():
+            result = self.api.add(
+                ent_word.get(), txt_means.get(1.0, tkn.END), ent_sa.get()
+            )
+            print(result)
+
         def add_to_main():
             frm_add.pack_forget()
-            self.main_screen()
+            self.search_screen()
 
         frm_add = ttk.Frame(self)
 
@@ -131,15 +146,14 @@ class WordyGui(tkn.Tk):
         scr_means.pack(side=tkn.RIGHT, fill=tkn.Y)
         txt_means.pack(side="left")
 
-        btn_lnk_add = ttk.Button(frm_add, text='Back', command=add_to_main)
-        btn_edit = ttk.Button(frm_add, text='Cancel')
-        btn_del = ttk.Button(frm_add, text='Add')
+        btn_cnl = ttk.Button(frm_add, text='Back', command=add_to_main)
+        btn_add = ttk.Button(frm_add, text='Add', command=add)
 
         ecas.enable_ctrl_a_select(ent_word)
         aph.add_place_holder(ent_word, 'Enter Word')
         aph.add_place_holder(ent_sa, 'See Also')
         aph.add_place_holder(
-            txt_means, 'Enter meanings, separated by a blank line', True
+            txt_means, 'Enter meanings, separated by blank lines', True
         )
 
         ent_word.grid(row=0, column=0, ipady=3, pady=pd.TOP, sticky='w')
@@ -147,9 +161,8 @@ class WordyGui(tkn.Tk):
             row=0, column=1, columnspan=6, ipady=3, pady=pd.TOP, sticky='e'
         )
         frm_means.grid(row=1, column=0, columnspan=7, pady=pd.MID)
-        btn_lnk_add.grid(row=2, column=0, pady=pd.BOTTOM, sticky='w')
-        btn_edit.grid(row=2, column=5, pady=pd.BOTTOM, sticky='e')
-        btn_del.grid(row=2, column=6, pady=pd.BOTTOM, sticky='e')
+        btn_cnl.grid(row=2, column=5, pady=pd.BOTTOM, sticky='e')
+        btn_add.grid(row=2, column=6, pady=pd.BOTTOM, sticky='e')
 
         frm_add.pack()
 

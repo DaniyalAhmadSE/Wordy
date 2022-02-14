@@ -1,4 +1,3 @@
-import threading
 from copy import deepcopy
 from tkinter import ttk
 from models.avl import AVL
@@ -51,7 +50,7 @@ class HashTableMD:
     def search(self, key: str):
         nest = self.dimensions
         idx = [0]*nest
-        sz = key.__len__()
+        sz = len(key)
 
         for i in range(0, nest):
             if i >= sz:
@@ -70,13 +69,14 @@ class HashTableMD:
             return None
         return result.data
 
-    def insert(self, obj, key, init_i=0):
+    def insert(self, obj, key, init_i=None):
         nest = self.dimensions
         idx = [0]*nest
-        sz = key.__len__()
+        sz = len(key)
 
-        idx[0] = init_i
-        start_hash_from = 0 if init_i == 0 else 1
+        if init_i is not None:
+            idx[0] = init_i
+        start_hash_from = 0 if init_i is None else 1
         for i in range(start_hash_from, nest):
             if i >= sz:
                 break
@@ -91,7 +91,48 @@ class HashTableMD:
             dest_path = dest_path[loc]
 
         dest: AVL = dest_path
-        dest.avl_insert(obj, key)
+        return dest.avl_insert(obj, key)
+
+    def delete(self, key):
+        nest = self.dimensions
+        idx = [0]*nest
+        sz = len(key)
+
+        for i in range(0, nest):
+            if i >= sz:
+                break
+            idx[i] = self.hash(key[i])
+
+        dest_path = self.arr
+        for i in range(nest):
+            loc = idx[i]
+            if dest_path[loc] is None:
+                dest_path[loc] = AVL()
+
+            dest_path = dest_path[loc]
+
+        dest: AVL = dest_path
+        return dest.avl_delete(key)
+
+    def update(self, obj, key):
+        nest = self.dimensions
+        idx = [0]*nest
+        sz = len(key)
+
+        for i in range(0, nest):
+            if i >= sz:
+                break
+            idx[i] = self.hash(key[i])
+
+        dest_path = self.arr
+        for i in range(nest):
+            loc = idx[i]
+            if dest_path[loc] is None:
+                dest_path[loc] = AVL()
+            dest_path = dest_path[loc]
+
+        dest: AVL = dest_path
+        return dest.avl_update(obj, key)
 
     dimensions = property(get_dimensions)
     arr = property(get_arr)
