@@ -126,6 +126,6 @@ class Wordy(HashTableMD):
     def delete_word(self, word):
         return self.delete(word)
 
-    def update_word(self, word, meanings):
-        vuc = Vucab(word, meanings)
+    def update_word(self, word, meanings, see_also):
+        vuc = Vucab(word, meanings, see_also)
         return self.update(vuc, word)

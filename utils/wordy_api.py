@@ -19,8 +19,7 @@ class WordyApi:
     def get_wordy(self) -> Wordy:
         return self._wordy
 
-    def add(self, word: str, meanings: str, see_also: str):
-
+    def _push(self, word: str, meanings: str, see_also: str, add_flag=True):
         word = '' if word == 'Enter Word' else word
         meanings = '' if meanings == 'Enter meanings, separated by blank lines\n' else meanings
         see_also = '' if see_also == 'See Also' else see_also
@@ -35,12 +34,21 @@ class WordyApi:
                 meanings_list = meanings_list[:-1]
             if see_also_list[-1] == '':
                 see_also_list = see_also_list[:-1]
-            if self.wordy.add_word(word, meanings_list, see_also_list):
-                response = 'Word added successfully'
+            if not add_flag:
+                if self.wordy.update_word(word, meanings_list, see_also_list):
+                    response = 'Word added successfully'
+                else:
+                    response = 'Word not found'
             else:
-                response = 'Word already exists'
+                if self.wordy.add_word(word, meanings_list, see_also_list):
+                    response = 'Word added successfully'
+                else:
+                    response = 'Word exists already'
 
         return response
+
+    def add(self, word: str, meanings: str, see_also: str):
+        return self._push(word, meanings, see_also)
 
     def search(self, word: str):
 
@@ -77,12 +85,8 @@ class WordyApi:
 
         return result
 
-    def update(self, word: str, meaning: str):
-        if self.wordy.update_word(word, meaning):
-            response = 'Word updated successfully'
-        else:
-            response = 'Word does not exist'
-        return response
+    def update(self, word: str, meanings: str, see_also: str):
+        return self._push(word, meanings, see_also, add_flag=False)
 
     def delete(self, word: str):
         if self.wordy.delete_word(word):
