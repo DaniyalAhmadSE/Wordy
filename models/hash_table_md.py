@@ -5,7 +5,7 @@ from constants.load_times import STRUCT_INIT_TIME
 
 
 class HashTableMD:
-    def __init__(self, sz: int = 27, init=True, dimensions=4) -> None:
+    def __init__(self, sz: int = 27, init=True, dimensions=5) -> None:
         self._dimensions = dimensions
         if init:
             self.create_structure(sz)
