@@ -1,9 +1,10 @@
 import tkinter as tkn
+from tkinter import messagebox
 import tkinter.ttk as ttk
 from utils.wordy_api import WordyApi
-from utils import make_read_only as mro
-from utils import enable_ctrl_a_select as ecas
-from utils import add_place_holder as aph
+from services import make_read_only as mro
+from services import enable_ctrl_a_select as ecas
+from services import add_place_holder as aph
 from constants import paddings as pd
 import mttkinter as mutlithreading_helper  # IGNORE
 
@@ -14,12 +15,24 @@ class WordyGui(tkn.Tk):
         self.api = WordyApi()
         self.title('Wordy')
         self.geometry('500x360')
-        # self.resizable(False, False)
+        self.resizable(False, False)
         self.start_app()
+
+    def on_closing(self):
+        if self.api.are_unsaved_changes:
+            save_changes = messagebox.askyesnocancel(
+                "Save Changes", "Do you want to save the changes?"
+            )
+            if save_changes is None:
+                return
+            if save_changes:
+                self.api.save_changes()
+        self.destroy()
 
     def start_app(self):
         self.load_screen()
         self.search_screen()
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
         # self.add_screen()
 
     def load_screen(self):

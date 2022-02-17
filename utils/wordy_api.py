@@ -1,3 +1,4 @@
+from contextlib import suppress
 import threading
 from models.vucab import Vucab
 from models.wordy import Wordy
@@ -11,13 +12,16 @@ class WordyApi:
     def start_thread(self, prog_bar=None, lbl=None):
         load_thread = threading.Thread(
             target=self.wordy.initialize,
-            kwargs={'prog_bar': prog_bar, 'lbl': lbl}
+            kwargs={'prg_bar': prog_bar, 'lbl': lbl}
         )
         load_thread.start()
         return load_thread
 
     def get_wordy(self) -> Wordy:
         return self._wordy
+
+    def get_are_unsaved_changes(self) -> bool:
+        return self._wordy._change_handler._changes_unsaved
 
     def _push(self, word: str, meanings: str, see_also: str, add_flag=True):
         word = '' if word == 'Enter Word' else word
@@ -30,13 +34,20 @@ class WordyApi:
         else:
             meanings_list = meanings.split('\n\n')
             see_also_list = see_also.split(', ')
-            if meanings_list[-1] == '':
-                meanings_list = meanings_list[:-1]
-            if see_also_list[-1] == '':
-                see_also_list = see_also_list[:-1]
+            with suppress(ValueError):
+                meanings_list.remove('')
+            sz = len(meanings_list)
+            for i in range(sz):
+                while meanings_list[i][-1] == '\n':
+                    meanings_list[i] = meanings_list[i][:-1]
+                while meanings_list[i][0] == '\n':
+                    meanings_list[i] = meanings_list[i][1:]
+
+            if see_also_list[0] == '':
+                see_also_list.clear()
             if not add_flag:
                 if self.wordy.update_word(word, meanings_list, see_also_list):
-                    response = 'Word added successfully'
+                    response = 'Word updated successfully'
                 else:
                     response = 'Word not found'
             else:
@@ -95,4 +106,8 @@ class WordyApi:
             response = 'Word does not exist'
         return response
 
+    def save_changes(self):
+        self.wordy.write_changes()
+
     wordy: Wordy = property(get_wordy)
+    are_unsaved_changes: bool = property(get_are_unsaved_changes)

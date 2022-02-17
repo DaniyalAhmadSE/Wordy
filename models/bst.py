@@ -3,13 +3,13 @@ from models.node import Node
 
 class BST:
     def __init__(self):
-        self.__root = None
+        self._root = None
 
     def _get_root(self) -> Node:
-        return self.__root
+        return self._root
 
     def _set_root(self, node) -> None:
-        self.__root = node
+        self._root = node
 
     @staticmethod
     def _search_leaf_with_parent(node: Node):
