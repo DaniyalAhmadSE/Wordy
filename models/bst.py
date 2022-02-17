@@ -1,23 +1,20 @@
 from models.node import Node
-from models.vucab import Vucab
 
 
 class BST:
     def __init__(self):
-        self.__root = None
+        self._root = None
 
     def _get_root(self) -> Node:
-        return self.__root
+        return self._root
 
     def _set_root(self, node) -> None:
-        self.__root = node
+        self._root = node
 
     @staticmethod
-    def _search_leaf_with_parent(node: Node, parent: Node):
+    def _search_leaf_with_parent(node: Node):
 
-        leaf_parent = parent
         leaf = node
-        is_left = False
 
         if leaf is not None:
 
@@ -27,88 +24,67 @@ class BST:
                 if leaf.left is None and leaf.right is None:
                     reached_leaf = True
                 elif leaf.left is not None:
-                    leaf_parent = leaf
                     leaf = leaf.left
-                    is_left = True
                 elif leaf.right is None:
-                    leaf_parent = leaf
                     leaf = leaf.right
-                    is_left = False
 
-        return [leaf, leaf_parent, is_left]
+        is_left = True if leaf.parent.left is leaf else False
+        return [leaf, leaf.parent, is_left]
 
-    def _search_node_with_parent(self, word: str):
-        parent = None
-        node = self.root
-        is_left = None
-
-        word_l = word.lower()
-
-        while node is not None:
-            node_word_l = node.data.word.lower()
-
-            if word_l == node_word_l:
-                break
-
-            parent = node
-            if word_l < node_word_l:
-                is_left = True
-                node = node.left
-            elif word_l > node_word_l:
-                is_left = False
-                node = node.right
-
-        return [node, parent, is_left]
-
-    def search_node(self, word: str) -> Node:
+    def search_node(self, key: str) -> Node:
         node = self.root
         result = None
-        word_l = word.lower()
+        key_l = key.lower()
 
         while node is not None:
-            node_word_l = node.data.word.lower()
+            node_l = node.data.word.lower()
 
-            if word_l == node_word_l:
+            if key_l == node_l:
                 result = node
                 break
 
-            if word_l < node_word_l:
+            if key_l < node_l:
                 node = node.left
-            elif word_l > node_word_l:
+            elif key_l > node_l:
                 node = node.right
 
         return result
 
-    def insert_from_point(self, val: Vucab, point: Node) -> None:
-        if self.search_node(val.word) is None:
-
-            new_node: Node = Node(val)
-
-            if point is None:
-                self.root = new_node
+    def insert_from_point(self, obj, key, point: Node, is_first=True) -> None:
+        if is_first:
+            if self.search_node(key) is not None:
+                print('Word already exists')
                 return
 
-            vucab_word_l = val.word.lower()
-            point_word_l = point.data.word.lower()
+        new_node: Node = Node(obj)
 
-            if vucab_word_l < point_word_l:
-                if point.left is None:
-                    point.left = new_node
-                else:
-                    self.insert_from_point(val, point.left)
-            elif vucab_word_l > point_word_l:
-                if point.right is None:
-                    point.right = new_node
-                else:
-                    self.insert_from_point(val, point.right)
-        else:
-            print('Word already exists')
+        if point is None:
+            self.root = new_node
+            return
 
-    def insert(self, val):
-        self.insert_from_point(val, self.root)
+        key_l = key.lower()
+        point_l = point.data.word.lower()
 
-    def delete_node(self, word) -> bool:
-        [to_del, parent, to_del_is_left] = self._search_node_with_parent(word)
+        if key_l < point_l:
+            if point.left is None:
+                new_node.parent = point
+                point.left = new_node
+            else:
+                self.insert_from_point(obj, key, point.left, False)
+        elif key_l > point_l:
+            if point.right is None:
+                new_node.parent = point
+                point.right = new_node
+            else:
+                self.insert_from_point(obj, key, point.right, False)
+
+    def insert(self, obj, key) -> None:
+        self.insert_from_point(obj, key, self.root)
+
+    def delete_node(self, key) -> bool:
+        to_del = self.search_node(key)
+        parent = to_del.parent
+        to_del_is_left = True if parent.left is to_del else False
 
         if to_del is None:
             return False
@@ -153,7 +129,7 @@ class BST:
                 self.root = to_del.right
         else:
             [predecessor, pre_parent, is_left] = self._search_leaf_with_parent(
-                to_del.left.right, to_del.left
+                to_del.left.right
             )
             to_del.data = predecessor.data
 
@@ -163,9 +139,6 @@ class BST:
                 pre_parent.right = None
 
         return True
-
-    def display(self):
-        self.display_in_order(self.root)
 
     def display_in_order(self, point: Node) -> None:
         if point is not None:
