@@ -14,7 +14,7 @@ class WordyGui(tkn.Tk):
         super().__init__()
         self.api = WordyApi()
         self.title('Wordy')
-        self.geometry('500x360')
+        self.geometry('555x380')
         self.resizable(False, False)
         self.start_app()
 
@@ -105,7 +105,7 @@ class WordyGui(tkn.Tk):
         frm_means = ttk.Frame(frm_src)
         scr_means = ttk.Scrollbar(frm_means)
         txt_means = tkn.Text(
-            frm_means, height=17, width=58, wrap=tkn.WORD,
+            frm_means, height=17, width=65, wrap=tkn.WORD,
             insertontime=0, yscrollcommand=scr_means.set
         )
         scr_means.config(command=txt_means.yview)
