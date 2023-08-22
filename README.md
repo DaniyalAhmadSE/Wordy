@@ -1,6 +1,6 @@
 # Wordy
 
-A dictionary desktop app created with Python
+A desktop dictionary app created with Python
 
 
 **Dependencies**
