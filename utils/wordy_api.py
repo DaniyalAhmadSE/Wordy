@@ -11,8 +11,7 @@ class WordyApi:
 
     def start_thread(self, prog_bar=None, lbl=None):
         load_thread = threading.Thread(
-            target=self.wordy.initialize,
-            kwargs={'prg_bar': prog_bar, 'lbl': lbl}
+            target=self.wordy.initialize, kwargs={"prg_bar": prog_bar, "lbl": lbl}
         )
         load_thread.start()
         return load_thread
@@ -24,37 +23,39 @@ class WordyApi:
         return self._wordy._change_handler._changes_unsaved
 
     def _push(self, word: str, meanings: str, see_also: str, add_flag=True):
-        word = '' if word == 'Enter Word' else word
-        meanings = '' if meanings == 'Enter meanings, separated by blank lines\n' else meanings
-        see_also = '' if see_also == 'See Also' else see_also
+        word = "" if word == "Enter Word" else word
+        meanings = (
+            "" if meanings == "Enter meanings, separated by blank lines\n" else meanings
+        )
+        see_also = "" if see_also == "See Also" else see_also
 
-        if (word == '') or (meanings == '' and see_also == ''):
-            response = 'Invalid inputs'
+        if (word == "") or (meanings == "" and see_also == ""):
+            response = "Invalid inputs"
 
         else:
-            meanings_list = meanings.split('\n\n')
-            see_also_list = see_also.split(', ')
+            meanings_list = meanings.split("\n\n")
+            see_also_list = see_also.split(", ")
             with suppress(ValueError):
-                meanings_list.remove('')
+                meanings_list.remove("")
             sz = len(meanings_list)
             for i in range(sz):
-                while meanings_list[i][-1] == '\n':
+                while meanings_list[i][-1] == "\n":
                     meanings_list[i] = meanings_list[i][:-1]
-                while meanings_list[i][0] == '\n':
+                while meanings_list[i][0] == "\n":
                     meanings_list[i] = meanings_list[i][1:]
 
-            if see_also_list[0] == '':
+            if see_also_list[0] == "":
                 see_also_list.clear()
             if not add_flag:
                 if self.wordy.update_word(word, meanings_list, see_also_list):
-                    response = 'Word updated successfully'
+                    response = "Word updated successfully"
                 else:
-                    response = 'Word not found'
+                    response = "Word not found"
             else:
                 if self.wordy.add_word(word, meanings_list, see_also_list):
-                    response = 'Word added successfully'
+                    response = "Word added successfully"
                 else:
-                    response = 'Word exists already'
+                    response = "Word exists already"
 
         return response
 
@@ -62,37 +63,36 @@ class WordyApi:
         return self._push(word, meanings, see_also)
 
     def search(self, word: str):
+        result = ""
 
-        result = ''
-
-        if word == 'Enter Word' or word == '':
-            result = 'Please enter a world\n'
+        if word == "Enter Word" or word == "":
+            result = "Please enter a world\n"
         else:
             vuc: Vucab = self.wordy.search(word)
 
             if vuc is None:
-                result = 'Word not found\n'
+                result = "Word not found\n"
 
             else:
                 meanings_list: list = vuc.meanings
                 see_also_list: list = vuc.see_also
 
                 for each in meanings_list:
-                    result += each + '\n\n'
+                    result += each + "\n\n"
 
                 if see_also_list:
-                    see_txt = 'See'
+                    see_txt = "See"
                     if meanings_list:
-                        see_txt += ' Also'
-                    see_txt += ': \n'
+                        see_txt += " Also"
+                    see_txt += ": \n"
 
                     result += see_txt
                     sz = len(see_also_list)
                     for i in range(sz):
                         result += see_also_list[i]
                         if i != sz - 1:
-                            result += ', '
-                    result += '\n'
+                            result += ", "
+                    result += "\n"
 
         return result
 
@@ -101,9 +101,9 @@ class WordyApi:
 
     def delete(self, word: str):
         if self.wordy.delete_word(word):
-            response = 'Word deleted successfully'
+            response = "Word deleted successfully"
         else:
-            response = 'Word does not exist'
+            response = "Word does not exist"
         return response
 
     def save_changes(self):

@@ -28,15 +28,15 @@ class Wordy(HashTableMD):
             each_sz = len(each_list)
             for j in range(each_sz):
                 if step is not None and prog_b is not None:
-                    prog_b.step(step/each_sz)
+                    prog_b.step(step / each_sz)
                 to_insert = each_list[j]
                 data: list = to_insert[1]
                 if not is_change:
-                    see_also = [s[3:] for s in data if s[:3] == '___']
-                    meanings = [s for s in data if s[:3] != '___']
+                    see_also = [s[3:] for s in data if s[:3] == "___"]
+                    meanings = [s for s in data if s[:3] != "___"]
                 else:
-                    see_also = [s[3:] for s in data[:-1] if s[:3] == '___']
-                    meanings = [s for s in data[:-1] if s[:3] != '___']
+                    see_also = [s[3:] for s in data[:-1] if s[:3] == "___"]
+                    meanings = [s for s in data[:-1] if s[:3] != "___"]
                 vuc = Vucab(to_insert[0], meanings, see_also)
                 if is_change:
                     order = data[-1]
@@ -56,11 +56,11 @@ class Wordy(HashTableMD):
             each_sz = len(each_list)
             for j in range(each_sz):
                 if step is not None and prog_b is not None:
-                    prog_b.step(step/each_sz)
+                    prog_b.step(step / each_sz)
                 to_insert = each_list[j]
                 data: list = to_insert[1]
-                see_also = [s[3:] for s in data[:-1] if s[:3] == '___']
-                meanings = [s for s in data[:-1] if s[:3] != '___']
+                see_also = [s[3:] for s in data[:-1] if s[:3] == "___"]
+                meanings = [s for s in data[:-1] if s[:3] != "___"]
                 vuc = Vucab(to_insert[0], meanings, see_also)
                 order = data[-1]
                 meanings = meanings[:-1]
@@ -77,7 +77,7 @@ class Wordy(HashTableMD):
             each_sz = len(each_list)
             for j in range(each_sz):
                 if step is not None and prog_b is not None:
-                    prog_b.step(step/each_sz)
+                    prog_b.step(step / each_sz)
                 to_del_change = each_list[j]
                 to_del = to_del_change[0]
                 order = to_del_change[1]
@@ -87,20 +87,14 @@ class Wordy(HashTableMD):
         return w_count
 
     def execute_changes(self, user_path, w_count, prog_b=None):
-        add_path = user_path + 'added.json'
-        del_path = user_path + 'deleted.json'
-        upd_path = user_path + 'edited.json'
+        add_path = user_path + "added.json"
+        del_path = user_path + "deleted.json"
+        upd_path = user_path + "edited.json"
         w_count += self.load_data(
-            add_path,
-            prog_b=prog_b,
-            step=lt.ADD_FILE_TIME,
-            is_change=True
+            add_path, prog_b=prog_b, step=lt.ADD_FILE_TIME, is_change=True
         )
         self.update_data(upd_path, prog_b, lt.UPD_FILE_TIME)
-        w_count -= self.unload_data(
-            del_path, prog_b,
-            lt.DEL_FILE_TIME
-        )
+        w_count -= self.unload_data(del_path, prog_b, lt.DEL_FILE_TIME)
 
         changes = self.change_handler.all_changes
 
@@ -138,71 +132,69 @@ class Wordy(HashTableMD):
                 each_meanings = each_vuc.meanings
                 each_see_also = each_vuc.see_also
 
-                val_list[i] = each_meanings + \
-                    ['___' + x for x in each_see_also]
+                val_list[i] = each_meanings + ["___" + x for x in each_see_also]
                 val_list[i].append(each_order)
 
             key_list[i] = each_word
 
         changes_dict = dict(zip(key_list, val_list))
 
-        with open(path, 'w') as file:
+        with open(path, "w") as file:
             json.dump(changes_dict, file)
 
-    def write_changes(self, usr_pth: str = 'database/user/'):
-        add_path = usr_pth + 'added.json'
-        del_path = usr_pth + 'deleted.json'
-        upd_path = usr_pth + 'edited.json'
+    def write_changes(self, usr_pth: str = "database/user/"):
+        add_path = usr_pth + "added.json"
+        del_path = usr_pth + "deleted.json"
+        upd_path = usr_pth + "edited.json"
         self.write_to_file(add_path)
         self.write_to_file(upd_path, is_update=True)
         self.write_to_file(del_path, is_del=True)
 
     def initialize(
-        self, def_pth: str = 'database/default/gcide_',
-        usr_pth: str = 'database/user/',
+        self,
+        def_pth: str = "database/default/gcide_",
+        usr_pth: str = "database/user/",
         prg_bar: ttk.Progressbar = None,
-        lbl: ttk.Label = None
+        lbl: ttk.Label = None,
     ):
         if tm.IS_IN_TEST_MODE:
-            def_pth = 'database/test/gcide_'
+            def_pth = "database/test_mode_data/gcide_"
 
-        def_paths = sorted(glob(def_pth + '*.json'))
+        def_paths = sorted(glob(def_pth + "*.json"))
         w_count = 0
-        lw = 'Loading Words: '
-        sy = 'Symbolic'
-        sym_path = def_pth[:-6] + 'symbols.json'
+        lw = "Loading Words: "
+        sy = "Symbolic"
+        sym_path = def_pth[:-6] + "symbols.json"
 
         if lbl is not None:
-            lbl.config(text='Initializing Data Structure')
+            lbl.config(text="Initializing Data Structure")
 
-        print('Initializing Data Structure')
+        print("Initializing Data Structure")
         self.create_structure(27, prg_bar)
 
         for i in range(26):
-            each_ch = chr(i+65)
-            print(lw + each_ch + f' ({w_count})')
+            each_ch = chr(i + 65)
+            print(lw + each_ch + f" ({w_count})")
             if lbl is not None:
-                lbl.config(text=lw + each_ch + f' ({w_count})')
-            w_count += self.load_data(
-                def_paths[i], i, prg_bar, lt.ADD_FILE_TIME
-            )
+                lbl.config(text=lw + each_ch + f" ({w_count})")
+            w_count += self.load_data(def_paths[i], i, prg_bar, lt.ADD_FILE_TIME)
 
-        print(lw + sy + f' ({w_count})' + ' from ' + sym_path)
+        print(lw + sy + f" ({w_count})" + " from " + sym_path)
         if lbl is not None:
-            lbl.config(text=lw + sy + f' ({w_count})')
+            lbl.config(text=lw + sy + f" ({w_count})")
         w_count += self.load_data(sym_path, 26, prg_bar, lt.ADD_FILE_TIME)
 
-        print(f'Finalizing ({w_count})')
+        print(f"Finalizing ({w_count})")
 
         if lbl is not None and prg_bar is not None:
-            lbl.config(text=f'Finalizing ({w_count})')
+            lbl.config(text=f"Finalizing ({w_count})")
 
         w_count = self.execute_changes(usr_pth, w_count, prg_bar)
 
         if lbl is not None and prg_bar is not None:
-            lbl.config(text=f'Finalizing ({w_count})')
-            prg_bar.step(99.9 - prg_bar['value'])
-            prg_bar['value'] += 0.1
+            lbl.config(text=f"Finalizing ({w_count})")
+            prg_bar.step(99.9 - prg_bar["value"])
+            prg_bar["value"] += 0.1
 
         return w_count
 

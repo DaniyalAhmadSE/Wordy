@@ -14,9 +14,9 @@ class Vucab:
         return self._see_also
 
     def display(self):
-        print('Word: ' + self.word)
-        print('Meanings: ' + str(self.meanings))
-        print('See Also: ' + str(self.meanings))
+        print("Word: " + self.word)
+        print("Meanings: " + str(self.meanings))
+        print("See Also: " + str(self.meanings))
 
     word = property(get_word)
     meanings = property(get_meanings)

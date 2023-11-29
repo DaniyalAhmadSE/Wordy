@@ -13,11 +13,9 @@ class BST:
 
     @staticmethod
     def _search_leaf_with_parent(node: Node):
-
         leaf = node
 
         if leaf is not None:
-
             reached_leaf = False
 
             while not reached_leaf:
@@ -53,7 +51,7 @@ class BST:
     def insert_from_point(self, obj, key, point: Node, is_first=True) -> None:
         if is_first:
             if self.search_node(key) is not None:
-                print('Word already exists')
+                print("Word already exists")
                 return
 
         new_node: Node = Node(obj)
