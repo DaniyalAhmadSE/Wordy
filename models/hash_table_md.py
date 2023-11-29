@@ -11,13 +11,11 @@ class HashTableMD:
             self.create_structure(sz)
 
     def create_structure(self, sz: int, prog_b: ttk.Progressbar = None):
-        self._arr = [
-            self.init_inners(sz, prog_b) for u in range(sz)
-        ]
+        self._arr = [self.init_inners(sz, prog_b) for u in range(sz)]
 
     def init_inners(self, sz, prog_b: ttk.Progressbar = None):
         if prog_b is not None:
-            prog_b.step(STRUCT_INIT_TIME/sz)
+            prog_b.step(STRUCT_INIT_TIME / sz)
 
         x = None
 
@@ -37,7 +35,7 @@ class HashTableMD:
     def hash(self, key: str) -> int:
         ascii = ord(key)
 
-        if (ascii < 97):
+        if ascii < 97:
             ascii = ascii + 32
 
         index = ascii - 97
@@ -49,7 +47,7 @@ class HashTableMD:
 
     def search(self, key: str):
         nest = self.dimensions
-        idx = [0]*nest
+        idx = [0] * nest
         sz = len(key)
 
         for i in range(0, nest):
@@ -71,7 +69,7 @@ class HashTableMD:
 
     def insert(self, obj, key, init_i=None):
         nest = self.dimensions
-        idx = [0]*nest
+        idx = [0] * nest
         sz = len(key)
 
         if init_i is not None:
@@ -95,7 +93,7 @@ class HashTableMD:
 
     def delete(self, key):
         nest = self.dimensions
-        idx = [0]*nest
+        idx = [0] * nest
         sz = len(key)
 
         for i in range(0, nest):
@@ -116,7 +114,7 @@ class HashTableMD:
 
     def update(self, obj, key):
         nest = self.dimensions
-        idx = [0]*nest
+        idx = [0] * nest
         sz = len(key)
 
         for i in range(0, nest):

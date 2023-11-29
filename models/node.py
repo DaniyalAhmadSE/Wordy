@@ -1,5 +1,4 @@
 class Node:
-
     def __init__(self, val, parent=None) -> None:
         self.__data = val
         self.__parent = parent
@@ -49,7 +48,7 @@ class Node:
 
     def display(self):
         if isinstance(self.data, int) or isinstance(self.data, str):
-            print(f'{self.__data}', end=' ')
+            print(f"{self.__data}", end=" ")
         else:
             self.data.display()
 

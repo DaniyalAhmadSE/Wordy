@@ -1,10 +1,8 @@
 from models.node import Node
 from models.bst import BST
-# from models.hotel import Hotel
 
 
 class AVL(BST):
-
     @staticmethod
     def max(x_height, y_height):
         return x_height if x_height > y_height else y_height
@@ -17,9 +15,7 @@ class AVL(BST):
 
     @staticmethod
     def update_height(point: Node):
-        point.height = 1 + max(
-            AVL.get_height(point.left), AVL.get_height(point.right)
-        )
+        point.height = 1 + max(AVL.get_height(point.left), AVL.get_height(point.right))
 
     @staticmethod
     def get_balance(point: Node):
@@ -51,9 +47,7 @@ class AVL(BST):
         point.parent = g_par
         par.left = point.right
         point.right = par
-        par.height = 1 + self.max(
-            self.get_height(par.left), self.get_height(par.right)
-        )
+        par.height = 1 + self.max(self.get_height(par.left), self.get_height(par.right))
         point.height = 1 + self.max(
             self.get_height(point.left), self.get_height(point.right)
         )
@@ -72,9 +66,7 @@ class AVL(BST):
         point.parent = g_par
         par.right = point.left
         point.left = par
-        par.height = 1 + self.max(
-            self.get_height(par.left), self.get_height(par.right)
-        )
+        par.height = 1 + self.max(self.get_height(par.left), self.get_height(par.right))
         point.height = 1 + self.max(
             self.get_height(point.left), self.get_height(point.right)
         )
@@ -122,7 +114,6 @@ class AVL(BST):
         return axel
 
     def push(self, obj, key, point: Node):
-
         new_node: Node = Node(obj)
 
         if point is None:
@@ -151,7 +142,7 @@ class AVL(BST):
 
     def avl_insert(self, obj, key) -> bool:
         if self.search_node(key) is not None:
-            print('Word already exists')
+            print("Word already exists")
             return False
 
         self.push(obj, key, self.root)
@@ -159,7 +150,7 @@ class AVL(BST):
 
     def avl_update(self, obj, key) -> bool:
         if self.search_node(key) is None:
-            print('Word does not exists')
+            print("Word does not exists")
             return False
 
         self.push(obj, key, self.root)
@@ -188,9 +179,7 @@ class AVL(BST):
             else:
                 io_suc: Node = self.get_min(point.right)
                 point.data = io_suc.data
-                point.right = self.del_from_point(
-                    point.right, io_suc.data.word.lower()
-                )
+                point.right = self.del_from_point(point.right, io_suc.data.word.lower())
 
         if point is None:
             return point
