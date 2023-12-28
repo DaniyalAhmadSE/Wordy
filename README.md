@@ -4,7 +4,7 @@ A dictionary app created with Python
 
 **About The Application**
 
-Wordy at its core contains a 5 Dimensional hashtable of AVLs, Thus having a time complexity of approximately O(1).
+Wordy at its core contains a 5 Dimensional hash table of AVLs, Thus it has a time complexity of approximately O(1).
 
 The core features it includes are: 
 - Search word
@@ -16,7 +16,7 @@ The GUI has been built with Tkinter.
 
 **Dependencies**
 
-Install mttkinter with `pip install mttkinter`, to avoid multi-threading errors.
+Install mttkinter with `pip install mttkinter`
 
 
 **Running Instructions**
