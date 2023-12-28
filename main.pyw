@@ -3,7 +3,7 @@ from views.wordy_gui import WordyGui
 
 def launch_gui():
     gui = WordyGui()
-    gui.mainloop()
+    gui.build()
 
 
 if __name__ == "__main__":

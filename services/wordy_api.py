@@ -11,7 +11,7 @@ class WordyApi:
 
     def start_thread(self, prog_bar=None, lbl=None):
         load_thread = threading.Thread(
-            target=self.wordy.initialize, kwargs={"prg_bar": prog_bar, "lbl": lbl}
+            target=self.wordy.initialize, kwargs={"progress_bar": prog_bar, "lbl": lbl}
         )
         load_thread.start()
         return load_thread
@@ -59,10 +59,10 @@ class WordyApi:
 
         return response
 
-    def add(self, word: str, meanings: str, see_also: str):
+    def add(self, word: str, meanings: str, see_also: str) -> str:
         return self._push(word, meanings, see_also)
 
-    def search(self, word: str):
+    def search(self, word: str) -> str:
         result = ""
 
         if word == "Enter Word" or word == "":

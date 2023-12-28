@@ -6,7 +6,7 @@ from models.change import Change
 
 from models.hash_table_md import HashTableMD
 from models.vucab import Vucab
-from utils.change_handler import ChangeHandler
+from services.change_handler import ChangeHandler
 from constants import load_times as lt, test_mode as tm, change_types as ct
 
 
@@ -83,7 +83,7 @@ class Wordy(HashTableMD):
                 order = to_del_change[1]
                 change = Change(to_del, order, ct.DELETED)
                 self.change_handler.deleted(change)
-            w_count += 1
+                w_count += 1
         return w_count
 
     def execute_changes(self, user_path, w_count, prog_b=None):
@@ -154,7 +154,7 @@ class Wordy(HashTableMD):
         self,
         def_pth: str = "database/default/gcide_",
         usr_pth: str = "database/user/",
-        prg_bar: ttk.Progressbar = None,
+        progress_bar: ttk.Progressbar = None,
         lbl: ttk.Label = None,
     ):
         if tm.IS_IN_TEST_MODE:
@@ -170,31 +170,31 @@ class Wordy(HashTableMD):
             lbl.config(text="Initializing Data Structure")
 
         print("Initializing Data Structure")
-        self.create_structure(27, prg_bar)
+        self.create_structure(27, progress_bar)
 
         for i in range(26):
             each_ch = chr(i + 65)
             print(lw + each_ch + f" ({w_count})")
             if lbl is not None:
                 lbl.config(text=lw + each_ch + f" ({w_count})")
-            w_count += self.load_data(def_paths[i], i, prg_bar, lt.ADD_FILE_TIME)
+            w_count += self.load_data(def_paths[i], i, progress_bar, lt.ADD_FILE_TIME)
 
         print(lw + sy + f" ({w_count})" + " from " + sym_path)
         if lbl is not None:
             lbl.config(text=lw + sy + f" ({w_count})")
-        w_count += self.load_data(sym_path, 26, prg_bar, lt.ADD_FILE_TIME)
+        w_count += self.load_data(sym_path, 26, progress_bar, lt.ADD_FILE_TIME)
 
         print(f"Finalizing ({w_count})")
 
-        if lbl is not None and prg_bar is not None:
+        if lbl is not None and progress_bar is not None:
             lbl.config(text=f"Finalizing ({w_count})")
 
-        w_count = self.execute_changes(usr_pth, w_count, prg_bar)
+        w_count = self.execute_changes(usr_pth, w_count, progress_bar)
 
-        if lbl is not None and prg_bar is not None:
+        if lbl is not None and progress_bar is not None:
             lbl.config(text=f"Finalizing ({w_count})")
-            prg_bar.step(99.9 - prg_bar["value"])
-            prg_bar["value"] += 0.1
+            progress_bar.step(99.9 - progress_bar["value"])
+            progress_bar["value"] += 0.1
 
         return w_count
 
