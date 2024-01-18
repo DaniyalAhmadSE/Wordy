@@ -1,5 +1,7 @@
 class Vucab:
-    def __init__(self, word: str, meanings: list, see_also: list = []) -> None:
+    def __init__(
+        self, word: str, meanings: list[str], see_also: list[str] = []
+    ) -> None:
         self._word = word
         self._meanings = meanings
         self._see_also = see_also
